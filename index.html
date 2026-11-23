@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b10">
+<title>Market Hours — Trading Session Dashboard</title>
+<style>
+:root{color-scheme:dark;--bg:#090b10;--panel:#11151e;--panel2:#151b26;--line:#252d3b;--muted:#8993a5;--text:#f3f5fa;--green:#9cf2c2;--blue:#9bbcff;--gold:#f6d58a;--pink:#f0a8d4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#1a2740 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1120px;margin:auto;padding:32px 22px 56px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#b5f6d0,#78a9ff);display:grid;place-items:center;color:#09110f;font-weight:900;font-size:19px;box-shadow:0 8px 28px #7fc6b633}.eyebrow{color:var(--muted);font-size:11px;letter-spacing:.17em;text-transform:uppercase}.brand h1{font-size:18px;margin:1px 0 0;letter-spacing:-.03em}.live{display:flex;align-items:center;gap:8px;border:1px solid #244735;background:#102019;color:var(--green);padding:7px 11px;border-radius:99px;font-size:12px}.dot{width:7px;height:7px;border-radius:50%;background:#78e7a8;box-shadow:0 0 12px #78e7a8;animation:pulse 1.8s infinite}
+h2{font-size:clamp(24px,4vw,34px);letter-spacing:-.045em;line-height:1.15;margin:0 0 8px}.sub{color:var(--muted);margin:0}.clock-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}.clock{background:linear-gradient(145deg,#151b26,#10141c);border:1px solid var(--line);border-radius:18px;padding:18px 19px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}.clock:hover{transform:translateY(-3px);border-color:#46536a}.clock:after{content:"";position:absolute;width:110px;height:110px;right:-42px;top:-55px;border-radius:50%;background:#9bbcff0c}.clock-head{display:flex;justify-content:space-between;align-items:center}.zone{font-size:12px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}.flag{font-size:18px}.time{font-size:clamp(27px,4vw,36px);font-weight:700;letter-spacing:-.05em;margin:10px 0 0;font-variant-numeric:tabular-nums}.date{font-size:12px;color:var(--muted);margin-top:2px}
+.current{border:1px solid #365844;background:linear-gradient(115deg,#14231d,#111820 65%);border-radius:20px;padding:20px 22px;margin:20px 0 26px;display:flex;justify-content:space-between;align-items:center;gap:20px;box-shadow:0 14px 50px #0004;animation:rise .65s both}.current .eyebrow{color:#9be7b8}.current h3{font-size:22px;letter-spacing:-.03em;margin:5px 0 3px}.current p{color:#a8b5b0;margin:0;font-size:13px}.current-time{text-align:right;white-space:nowrap}.current-time strong{font-size:25px;font-variant-numeric:tabular-nums}.current-time span{display:block;color:var(--muted);font-size:11px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:28px 0 14px}.section-head h2{font-size:21px;margin:0}.section-head p{font-size:12px;color:var(--muted);margin:4px 0 0}.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:11px}.legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.table-wrap{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#0e1219;box-shadow:0 18px 50px #0003}.table-scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:650px}thead{background:#151b26}th{text-align:left;padding:14px 17px;color:#9aa5b7;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:650}td{padding:13px 17px;border-top:1px solid #202734;font-size:13px}tbody tr{transition:background .2s}tbody tr:hover{background:#161d29}.timecell{font-variant-numeric:tabular-nums;font-weight:650;white-space:nowrap}.event{font-weight:600}.detail{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:2px}.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid #344052;border-radius:99px;color:#c6d0e0;font-size:10px;white-space:nowrap}.active-row{background:linear-gradient(90deg,#173024aa,#15231f77)!important;box-shadow:inset 3px 0 #7fe4a6}.active-row td{border-top-color:#315440}.active-row .event:after{content:"NOW";font-size:9px;letter-spacing:.1em;color:#9cf2c2;border:1px solid #3b7755;border-radius:99px;padding:2px 6px;margin-left:9px;vertical-align:2px}
+.note{margin-top:14px;color:#788397;font-size:11px;line-height:1.6}.note strong{color:#aeb8c7}.footer{display:flex;justify-content:space-between;gap:12px;margin-top:28px;padding-top:18px;border-top:1px solid #202734;color:#697487;font-size:11px}
+@keyframes pulse{50%{opacity:.45;transform:scale(.8)}}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){.wrap{padding:22px 14px 38px}.top{margin-bottom:22px}.clock-grid{gap:8px}.clock{padding:13px 11px;border-radius:14px}.time{font-size:clamp(19px,5vw,27px)}.zone{font-size:9px;letter-spacing:.08em}.flag{font-size:15px}.current{padding:17px;align-items:flex-start}.current h3{font-size:18px}.current-time strong{font-size:20px}.section-head{align-items:flex-start;flex-direction:column}.footer{flex-direction:column}}
+@media(max-width:390px){.clock-grid{grid-template-columns:1fr;gap:8px}.clock{display:flex;align-items:center;justify-content:space-between}.time{margin:0}.date{display:none}.current{gap:10px}.current-time strong{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">M</div><div><div class="eyebrow">Trading companion</div><h1>MARKET HOURS</h1></div></div>
+    <div class="live"><span class="dot"></span> LIVE CLOCKS</div>
+  </header>
+  <main>
+    <div>
+      <div class="eyebrow">Global market watch</div>
+      <h2>Know the session.<br>Make your move.</h2>
+      <p class="sub">A live view of New York, UK and India market time.</p>
+    </div>
+    <section class="clock-grid" aria-label="Live timezone clocks">
+      <article class="clock"><div class="clock-head"><span class="zone">New York · ET</span><span class="flag">🇺🇸</span></div><div class="time" id="ny-time">--:--:--</div><div class="date" id="ny-date">Loading…</div></article>
+      <article class="clock"><div class="clock-head"><span class="zone">India · IST</span><span class="flag">🇮🇳</span></div><div class="time" id="in-time">--:--:--</div><div class="date" id="in-date">Loading…</div></article>
+      <article class="clock"><div class="clock-head"><span class="zone">United Kingdom</span><span class="flag">🇬🇧</span></div><div class="time" id="uk-time">--:--:--</div><div class="date" id="uk-date">Loading…</div></article>
+    </section>
+
+    <section class="current" aria-live="polite">
+      <div><div class="eyebrow">Happening now · Based on your schedule</div><h3 id="current-title">Checking current session…</h3><p id="current-desc">Your active market window will appear here.</p></div>
+      <div class="current-time"><strong id="current-ist">--:--</strong><span>Current IST</span></div>
+    </section>
+
+    <div class="section-head"><div><h2>Session timeline</h2><p>Times update automatically for daylight saving changes.</p></div><div class="legend"><span><i style="background:#9cf2c2"></i>Active window</span><span><i style="background:#9bbcff"></i>Market event</span></div></div>
+    <div class="table-wrap"><div class="table-scroll">
+      <table>
+        <thead><tr><th>New York (ET)</th><th>India (IST)</th><th>United Kingdom</th><th>Market activity</th></tr></thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+    </div></div>
+    <p class="note"><strong>Schedule note:</strong> Event labels and India times are transcribed from your handwritten reference. New York and UK equivalents are calculated live using their time zones, so they adjust automatically when daylight saving time changes. “Active” means the latest listed event window up to the next event.</p>
+  </main>
+  <footer class="footer"><span>MARKET HOURS · PERSONAL TRADING DASHBOARD</span><span>Local time sync · No sign-in required</span></footer>
+</div>
+<script>
+const zones={ny:"America/New_York",uk:"Europe/London",ist:"Asia/Kolkata"};
+const schedule=[
+ {time:"03:30",title:"Forex open",desc:"Forex market opens — watch volatility",kind:"Market open"},
+ {time:"04:30",title:"Futures open",desc:"Futures session begins",kind:"Market open"},
+ {time:"12:30",title:"UK killzone",desc:"UK / London killzone window",kind:"Trading window"},
+ {time:"13:30",title:"UK open",desc:"8:00 AM UK open",kind:"Market open"},
+ {time:"17:30",title:"NY pre-market",desc:"New York pre-market activity",kind:"Pre-market"},
+ {time:"18:30",title:"NY open",desc:"New York market opens",kind:"Market open"},
+ {time:"19:30",title:"NY session",desc:"New York session continues",kind:"Session"},
+ {time:"20:30",title:"NY session",desc:"New York session continues",kind:"Session"},
+ {time:"21:30",title:"NY session",desc:"New York session continues",kind:"Session"},
+ {time:"22:30",title:"NY session",desc:"New York session continues",kind:"Session"},
+ {time:"23:30",title:"NY session",desc:"New York session continues",kind:"Session"},
+ {time:"00:30",title:"NY session",desc:"Late New York session",kind:"Session"},
+ {time:"02:30",title:"Forex close",desc:"Forex trading week/session close reference",kind:"Market close"}
+];
+const fmt=(date,zone,opts)=>new Intl.DateTimeFormat("en-US",{timeZone:zone,...opts}).format(date);
+function clock(id,dateId,zone){const now=new Date();document.getElementById(id).textContent=fmt(now,zone,{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});document.getElementById(dateId).textContent=fmt(now,zone,{weekday:"long",month:"short",day:"numeric",year:"numeric"});}
+function partsInZone(date,zone){const p=new Intl.DateTimeFormat("en-GB",{timeZone:zone,hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(date);return {hour:+p.find(x=>x.type==="hour").value,minute:+p.find(x=>x.type==="minute").value};}
+function timeOnDate(date,zone,hhmm){const [h,m]=hhmm.split(":").map(Number);const target=new Date(date);const current=partsInZone(target,zone);let guess=target.getTime()+((h-current.hour)*60+(m-current.minute))*60000;for(let i=0;i<2;i++){const got=partsInZone(new Date(guess),zone);guess+=((h-got.hour)*60+(m-got.minute))*60000;}return new Date(guess);}
+function render(){const now=new Date();clock("ny-time","ny-date",zones.ny);clock("uk-time","uk-date",zones.uk);clock("in-time","in-date",zones.ist);
+ const istNow=partsInZone(now,zones.ist), nowMin=istNow.hour*60+istNow.minute;
+ const sorted=[...schedule].sort((a,b)=>a.time.localeCompare(b.time));
+ let active=-1, best=1441;
+ sorted.forEach((s,i)=>{const [h,m]=s.time.split(":").map(Number),mins=h*60+m;let delta=(nowMin-mins+1440)%1440;if(delta<best){best=delta;active=i;}});
+ const current=sorted[active];document.getElementById("current-title").textContent=current.title;document.getElementById("current-desc").textContent=current.desc;document.getElementById("current-ist").textContent=fmt(now,zones.ist,{hour:"2-digit",minute:"2-digit",hour12:true});
+ const tbody=document.getElementById("schedule-body");tbody.innerHTML="";
+ sorted.forEach((s,i)=>{const eventDate=timeOnDate(now,zones.ist,s.time);const tr=document.createElement("tr");if(i===active)tr.className="active-row";
+ const ny=fmt(eventDate,zones.ny,{hour:"2-digit",minute:"2-digit",hour12:true});const uk=fmt(eventDate,zones.uk,{hour:"2-digit",minute:"2-digit",hour12:true});const ist=fmt(eventDate,zones.ist,{hour:"2-digit",minute:"2-digit",hour12:true});
+ tr.innerHTML=`<td class="timecell">${ny}</td><td class="timecell">${ist}</td><td class="timecell">${uk}</td><td><span class="event">${s.title}</span><span class="detail">${s.desc}</span></td>`;tbody.appendChild(tr);});
+}
+render();setInterval(render,1000);
+</script>
+</body></html>
